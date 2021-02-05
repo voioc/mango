@@ -1,4 +1,11 @@
 #!/bin/sh
+###
+ # @Author: Cedar
+ # @Date: 2019-06-19 09:37:45
+ # @LastEditors: Cedar
+ # @LastEditTime: 2021-01-28 11:23:17
+ # @FilePath: /Mango/build.sh
+### 
 #
 
 #当前版本号,每次更新服务时都必须更新版本号
@@ -23,7 +30,7 @@ go build -ldflags "-X $Build.Version=$CurrentVersion \
                    -X $Build.GitCommit=$GitCommit \
                    -X '$Build.BuildTime=$BuildTime' \
                    -X '$Build.GoVersion=$GoVersion' \
-                   -X $Build.RunEnv=release " \
+                   -X $Build.RunEnv=debug " \
         -o ./bin/$ServerName ./server.go
 
 

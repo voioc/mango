@@ -7,7 +7,7 @@
   },
   "db": {
     "driver": "mysql",
-    "dsn": "root:123456@tcp(127.0.0.1:3306)/applecms?charset=utf8mb4"
+    "nodes": "root:123456@tcp(127.0.0.1:3306)/voyager?charset=utf8mb4"
   },
   "cache": [
     {

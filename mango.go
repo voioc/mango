@@ -4,7 +4,7 @@ package main
  * @Author: Cedar
  * @Date: 2020-11-05 11:03:52
  * @LastEditors: Cedar
- * @LastEditTime: 2021-01-26 17:48:01
+ * @LastEditTime: 2021-01-28 11:58:10
  * @FilePath: /Mango/mango.go
  */
 
@@ -21,6 +21,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/voioc/coco/config"
 	"github.com/voioc/mango/app/handler"
+	"github.com/voioc/mango/middlewares"
 )
 
 func main() {
@@ -48,8 +49,12 @@ func main() {
 	gin.DefaultWriter = io.MultiWriter(access, os.Stdout)
 
 	r := gin.Default()
-	r.GET("/login", handler.Login)
-	// r.GET("/task/list", handler.TaskList)
+	r.Use(middlewares.Cors())
+	{
+		r.GET("/login", handler.Login)
+		r.GET("/post/index", handler.PostIndex)
+	}
+
 	// r.GET("/task/do", handler.TaskDo)
 	// r.GET("/task/finish", handler.TaskFinish)
 	// r.Run() // listen and serve on 0.0.0.0:8080
