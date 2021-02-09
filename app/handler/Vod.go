@@ -11,7 +11,7 @@ import (
  * @Author: Cedar
  * @Date: 2021-01-28 11:08:27
  * @LastEditors: Cedar
- * @LastEditTime: 2021-02-09 16:30:08
+ * @LastEditTime: 2021-02-09 17:37:08
  * @FilePath: /Mango/app/handler/Vod.go
  */
 
@@ -21,7 +21,7 @@ func VodIndex(c *gin.Context) {
 	bm := model.NewBaseModel(c)
 
 	page := c.DefaultQuery("page", "1")
-	data := bm.GetVodList(page)
+	data := bm.GetVodAuthorList(page)
 	// extension := bm.GetExtensionList(etype)
 
 	// result := map[string]interface{}{"operation": operation, "extension": extension}

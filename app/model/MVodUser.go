@@ -2,8 +2,8 @@
  * @Author: Cedar
  * @Date: 2021-02-09 09:59:11
  * @LastEditors: Cedar
- * @LastEditTime: 2021-02-09 17:23:24
- * @FilePath: /Mango/app/model/MVodAuthor.go
+ * @LastEditTime: 2021-02-09 17:48:58
+ * @FilePath: /Mango/app/model/MVodUser.go
  */
 package model
 
@@ -17,14 +17,19 @@ import (
 	"github.com/voioc/coco/public"
 )
 
-type VodAuthor struct {
-	Vods
+type VodUser struct {
+	Vods   `xorm:"extends"`
+	Author Users `xorm:"extends" json:"author"`
+}
+
+func (VodUser) TableName() string {
+	return "vods"
 }
 
 // GetVodAuthorList 获取视频列表
-func (bm *BaseModel) GetVodAuthorList(page string) *[]Vods {
-	key := "vod_list_page_" + page
-	var data []Vods
+func (bm *BaseModel) GetVodAuthorList(page string) *[]VodUser {
+	key := "vod_user_list_page_" + page
+	var data []VodUser
 	StartTime := time.Now()
 
 	if !bm.GetBool("_flush") {
@@ -38,7 +43,8 @@ func (bm *BaseModel) GetVodAuthorList(page string) *[]Vods {
 
 	StartTime = time.Now()
 	pageInt, _ := strconv.Atoi(page)
-	if err := GetDB().Where("status = ?", 1).Limit(20, 20*pageInt).Find(&data); err != nil {
+	// if err := GetDB().Where("status = ?", 1).Limit(20, 20*pageInt).Find(&data); err != nil {
+	if err := GetDB().Where("vods.status = ?", 1).Limit(20, (pageInt-1)*20).Join("LEFT OUTER", "users", "users.id = vods.author").Find(&data); err != nil {
 		logcus.Print("error", "Get data from mysql error: "+err.Error())
 	} else {
 		bm.SetDebug(fmt.Sprintf("{Get data from Mysql ("+public.TimeCost(StartTime)+"): %s}", data), 1)
