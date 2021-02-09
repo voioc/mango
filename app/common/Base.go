@@ -4,40 +4,32 @@ package common
  * @Author: Cedar
  * @Date: 2020-11-06 14:22:30
  * @LastEditors: Cedar
- * @LastEditTime: 2020-11-06 16:47:57
- * @FilePath: /LeView/app/common/Base.go
+ * @LastEditTime: 2021-02-09 16:29:10
+ * @FilePath: /Mango/app/common/Base.go
  */
 
 import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/voioc/coco/public"
 )
 
 // Base 基类
 type Base struct {
-	Debug   *[]string
-	IsCache bool
+	*gin.Context
 }
 
 // NewBase NewBase
-func NewBase() *Base {
-	return &Base{}
-}
-
-// SetIsCache 是否使用缓存
-func (base *Base) SetIsCache(isCache bool) {
-	base.IsCache = isCache
-}
-
-// SetDebugP 设置debug的指针
-func (base *Base) SetDebugP(debug *[]string) {
-	base.Debug = debug
+func NewBase(c *gin.Context) *Base {
+	return &Base{c}
 }
 
 // SetDebug 写入debug信息
-func (base *Base) SetDebug(str string, depth int) {
-	if base.Debug != nil {
+func (b *Base) SetDebug(str string, depth int) {
+	if _, ok := b.Get("_debug"); ok {
 		if depth == 0 {
 			depth = 1
 		}
@@ -45,6 +37,26 @@ func (base *Base) SetDebug(str string, depth int) {
 		_, file, line, _ := runtime.Caller(depth)
 		path := strings.LastIndexByte(file, '/')
 		tmp := string([]byte(file)[path+1:]) + "(line " + strconv.Itoa(line) + "): " + str
-		*base.Debug = append(*base.Debug, tmp)
+
+		b.Set("_debug", append(b.GetStringSlice("_debug"), tmp))
+		// *base.Debug = append(*base.Debug, tmp)
 	}
+}
+
+// GetOutPut 获取返回数据
+func (b *Base) GetOutPut(data interface{}) *gin.H {
+	result := gin.H{"code": 0, "message": "success"}
+
+	if data == nil {
+		data = map[string]string{}
+	}
+
+	result["data"] = data
+
+	if _, ok := b.Get("_debug"); ok {
+		debug := b.GetStringSlice("_debug")
+		result["debug"] = append(debug, "[ALL] cost:"+public.TimeCost(b.GetTime("start")))
+	}
+
+	return &result
 }

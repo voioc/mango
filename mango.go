@@ -4,7 +4,7 @@ package main
  * @Author: Cedar
  * @Date: 2020-11-05 11:03:52
  * @LastEditors: Cedar
- * @LastEditTime: 2021-01-28 11:58:10
+ * @LastEditTime: 2021-02-09 16:35:03
  * @FilePath: /Mango/mango.go
  */
 
@@ -41,7 +41,8 @@ func main() {
 	}
 
 	defer access.Close()
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.DebugMode)
+	// gin.SetMode(config.GetConfig().GetString("log.access"))
 	gin.DefaultWriter = io.MultiWriter(access)
 
 	// 如果需要将日志同时写入文件和控制台，请使用以下代码
@@ -49,10 +50,15 @@ func main() {
 	gin.DefaultWriter = io.MultiWriter(access, os.Stdout)
 
 	r := gin.Default()
+
+	r.Use(middlewares.Params)
+
 	r.Use(middlewares.Cors())
 	{
 		r.GET("/login", handler.Login)
 		r.GET("/post/index", handler.PostIndex)
+		r.GET("/qiniu/token", handler.GetQiNiuToken)
+		r.GET("/vod/index", handler.VodIndex)
 	}
 
 	// r.GET("/task/do", handler.TaskDo)
