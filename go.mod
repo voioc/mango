@@ -8,7 +8,6 @@ require (
 	github.com/alibabacloud-go/tea v1.1.20
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
 	github.com/gin-gonic/gin v1.9.0
-	github.com/golib2020/wechat v0.0.0-20200110051928-ac39816439ec
 	github.com/json-iterator/go v1.1.12
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0
