@@ -17,7 +17,7 @@ export GOPROXY=https://goproxy.io
 export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
 Path=$(cd `dirname $0`; pwd)
-Build=$(basename `pwd` | tr 'A-Z' 'a-z')/app/build
+Build=$(basename `pwd` | tr 'A-Z' 'a-z')/build
 
 ServerName=$(basename `pwd` | tr 'A-Z' 'a-z')
 BuildTime=$(date "+%Y-%m-%d %H:%M:%S")
