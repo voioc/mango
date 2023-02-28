@@ -7,8 +7,6 @@ import (
 
 	"github.com/voioc/mango/common"
 
-	"github.com/golib2020/wechat/work/wxbizmsgcrypt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
 )
@@ -32,7 +30,7 @@ func WxAuth(c *gin.Context) {
 		return
 	}
 
-	wxcpt := wxbizmsgcrypt.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, common.CORPID, wxbizmsgcrypt.XmlType)
+	wxcpt := common.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, common.CORPID, common.JsonType)
 	echoStr, cryptErr := wxcpt.VerifyURL(msgSignature, cast.ToString(timestamp), nonce, echostr)
 	if nil != cryptErr {
 		fmt.Println("verifyUrl fail", cryptErr)
