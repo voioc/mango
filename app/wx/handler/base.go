@@ -2,9 +2,11 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 
+	"github.com/voioc/mango/app/wx/define"
 	"github.com/voioc/mango/common"
 
 	"github.com/gin-gonic/gin"
@@ -43,4 +45,47 @@ func WxAuth(c *gin.Context) {
 	// }
 	c.String(http.StatusOK, string(echoStr))
 	// return errors.New("微信验证appID错误, 微信请求值: " + string(id) + ", 配置文件内配置为: " + corpId)
+}
+
+func MsgBack(c *gin.Context) {
+	/*
+	   指令回调URL： 微信服务器推送suite_ticket以及安装应用时推送auth_code时。
+	*/
+	//企业微信加密签名
+	// msgSignature := cast.ToString(c.Query("msg_signature"))
+	// //时间戳
+	// timestamp := cast.ToString(c.Query("timestamp"))
+	// //随机数
+	// nonce := cast.ToString(c.Query("nonce"))
+	// // post请求的密文数据
+	// defer c.Request.Body.Close()
+	// con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
+
+	// // 访问应用和企业回调传不同的ID
+	// wxcpt := wxbizmsgcrypt.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, model.SuitId, wxbizmsgcrypt.XmlType)
+	// msg, cryptErr := wxcpt.DecryptMsg(msgSignature, timestamp, nonce, con)
+	// if nil != cryptErr {
+	// 	fmt.Println("DecryptMsg fail", cryptErr)
+	// 	return
+	// }
+	// fmt.Println(string(msg))
+
+	// var content MsgContent
+	// xml.Unmarshal(msg, &content)
+	// var changeContent ChangeContent
+	// xml.Unmarshal(msg, &changeContent)
+	// fmt.Println(changeContent)
+
+	var textMsg define.WXTextMsg
+	err := c.ShouldBindXML(&textMsg)
+	if err != nil {
+		log.Printf("[消息接收] - XML数据包解析失败: %v\n", err)
+		return
+	}
+
+	log.Printf("[消息接收] - 收到消息, 消息类型为: %s, 消息内容为: %s\n", textMsg.MsgType, textMsg.Content)
+
+	//业务逻辑，根据信息需要进行的业务逻辑
+
+	c.String(http.StatusOK, "success") //需要返回"success"不然企业微信认为此次请求错误
 }
