@@ -1,0 +1,23 @@
+[log]
+    max_size = 4096     # 单个日志文件最大容量, 单位: MB
+    max_age  = 7        # 日志保留天数, 默认 7天, 单位: 天
+    closed = false      # 关闭所有日志  默认 false
+    
+# db 配置
+[db]
+    [db.main]
+        driver = "mysql"
+        dsn = [
+            "report_rw:A#^n5pbq2+kcDZ9@tcp(rm-2ze80066x5od03dc5co.mysql.rds.aliyuncs.com:3306)/report?charset=utf8&loc=Local",
+        ]
+        max_conn = 50           # 最大连接数
+        max_idle_conn = 25      # 最大空闲连接数
+        conn_max_life = 3600    # 连接最长持续时间， 默认1小时，单位秒
+        is_log = true           # 是否记录日志  日志级别为info
+
+# cache 配置
+[[cache]]
+    driver =  "redis"
+    nodes = "127.0.0.1:6379"
+    password = ""
+    
