@@ -1,12 +1,6 @@
 package router
 
 import (
-	"net/http"
-
-	"github.com/voioc/mango/common"
-
-	"codeup.aliyun.com/61e54b0e0bb300d827e1ae27/backend/golib/cache"
-	"codeup.aliyun.com/61e54b0e0bb300d827e1ae27/backend/golib/db"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,15 +12,15 @@ func InitRouter(engine *gin.Engine) {
 		c.String(200, "Hello, China, Hello World")
 	})
 
-	// 组件探活
-	engine.GET("/v1/active", func(c *gin.Context) {
-		data := map[string]interface{}{
-			"db":    db.Active(),
-			"cache": cache.Active(),
-		}
-		c.JSON(http.StatusOK, common.Success(c, data))
-	})
-	// -------------------------------------------------
+	// // 组件探活
+	// engine.GET("/v1/active", func(c *gin.Context) {
+	// 	data := map[string]interface{}{
+	// 		"db":    db.Active(),
+	// 		"cache": cache.Active(),
+	// 	}
+	// 	c.JSON(http.StatusOK, common.Success(c, data))
+	// })
+	// // -------------------------------------------------
 
 	rootGroup := engine.Group("/")
 
