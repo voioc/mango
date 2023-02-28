@@ -31,7 +31,7 @@ go build -ldflags "-X $Build.Version=$CurrentVersion \
                    -X '$Build.BuildTime=$BuildTime' \
                    -X '$Build.GoVersion=$GoVersion' \
                    -X $Build.RunEnv=debug " \
-        -o ./bin/$ServerName ./server.go
+        -o ./bin/$ServerName ./main.go
 
 
 if [ $? -eq 0 ]
