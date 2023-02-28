@@ -51,7 +51,7 @@ func init() {
 	path, _ := filepath.Abs(filepath.Dir(""))        // 获取当前路径
 	conf := path + "/config/config_" + env + ".toml" // 拼接配置文件
 
-	versionFlag := flag.Bool("V", false, "print the version")
+	versionFlag := flag.Bool("v", false, "print the version")
 	configFile := flag.String("c", conf, "配置文件路径") // 手动置顶配置文件
 	flag.Parse()
 
