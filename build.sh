@@ -51,5 +51,5 @@ go build -ldflags "-X main.AppVersion=$CurrentVersion \
 
 if [ $? -eq 0 ]
 then
-    $Path/bin/$ServerName -V
+    $Path/bin/$ServerName -v
 fi
