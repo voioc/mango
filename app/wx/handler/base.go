@@ -32,7 +32,7 @@ func WxAuth(c *gin.Context) {
 		return
 	}
 
-	wxcpt := common.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, common.CORPID, common.JsonType)
+	wxcpt := common.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, common.CORPID, common.XmlType)
 	echoStr, cryptErr := wxcpt.VerifyURL(msgSignature, cast.ToString(timestamp), nonce, echostr)
 	if nil != cryptErr {
 		fmt.Println("verifyUrl fail", cryptErr)
@@ -89,7 +89,7 @@ func MsgBack(c *gin.Context) {
 
 	fmt.Printf("msg: %+v", textMsg)
 
-	wxcpt := common.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, common.CORPID, common.JsonType)
+	wxcpt := common.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, common.CORPID, common.XmlType)
 	msg, err := wxcpt.DecryptMsg(msgSignature, timestamp, nonce, con)
 	if err != nil {
 		fmt.Println(err.ErrCode, err.ErrMsg)
