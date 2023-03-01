@@ -103,6 +103,29 @@ func MsgBack(c *gin.Context) {
 
 	fmt.Printf("%+v\n", content)
 
+	// 回复信息
+	reply, _ := xml.Marshal(define.ReplyTextMsg{
+		ToUsername:   content.FromUsername,
+		FromUsername: content.ToUsername,
+		CreateTime:   content.CreateTime,
+		MsgType:      "text",
+		Content:      "Receive",
+	})
+
+	encryptMsg, cryptErr := wxcpt.EncryptMsg(string(reply), timestamp, nonce)
+	if cryptErr != nil {
+		fmt.Println("回复加密出错", cryptErr)
+		return
+	}
+
+	fmt.Println("reply encry", string(encryptMsg))
+	if num, err := c.Writer.Write(encryptMsg); err != nil {
+		fmt.Println("返回消息失败: ", err.Error())
+		return
+	} else {
+		fmt.Println("success ", num)
+	}
+
 	//业务逻辑，根据信息需要进行的业务逻辑
 
 	c.String(http.StatusOK, "success") //需要返回"success"不然企业微信认为此次请求错误
