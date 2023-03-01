@@ -22,7 +22,7 @@ func ChatS(c *gin.Context) *ChatService {
 
 func (s *ChatService) Send(msg string) (*define.Chat, error) {
 	header := map[string]string{
-		"Authorization": "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",
+		"Authorization": "Bearer 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",
 	}
 
 	data := map[string]interface{}{
@@ -41,7 +41,7 @@ func (s *ChatService) Send(msg string) (*define.Chat, error) {
 	}
 
 	if tmp.StatusCode != 200 {
-		return nil, fmt.Errorf("can't get data from cz88, status code: %d", tmp.StatusCode)
+		return nil, fmt.Errorf("http code: %d | data: %s", tmp.StatusCode, string(tmp.Body))
 	}
 
 	result := define.Chat{}
