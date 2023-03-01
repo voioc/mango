@@ -23,7 +23,7 @@ func ChatS(c *gin.Context) *ChatService {
 func (s *ChatService) Send(msg string) (*define.Chat, error) {
 	header := map[string]string{
 		"Content-Type":  "application/json",
-		"Authorization": "Bearer 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",
+		"Authorization": "Bearer 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",
 		// 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
 	}
 
