@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -78,16 +79,14 @@ func MsgBack(c *gin.Context) {
 
 	defer c.Request.Body.Close()
 	con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
-	// fmt.Printf("con: %+v", string(con))
+	fmt.Printf("con: %+v", string(con))
 
-	var textMsg define.WXTextMsg
+	// var textMsg define.WXTextMsg
 	// err := c.ShouldBindXML(&textMsg)
 	// if err != nil {
 	// 	log.Printf("[消息接收] - XML数据包解析失败: %v\n", err)
 	// 	return
 	// }
-
-	fmt.Printf("msg: %+v", textMsg)
 
 	wxcpt := common.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, common.CORPID, common.XmlType)
 	msg, err := wxcpt.DecryptMsg(msgSignature, timestamp, nonce, con)
@@ -96,6 +95,13 @@ func MsgBack(c *gin.Context) {
 	}
 
 	fmt.Println(string(msg))
+
+	var content define.MsgContent
+	if err := xml.Unmarshal(msg, &content); err != nil {
+		fmt.Println("反序列化错误")
+	}
+
+	fmt.Printf("%+v\n", content)
 
 	//业务逻辑，根据信息需要进行的业务逻辑
 
