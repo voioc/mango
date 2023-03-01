@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -77,9 +76,9 @@ func MsgBack(c *gin.Context) {
 	// xml.Unmarshal(msg, &changeContent)
 	// fmt.Println(changeContent)
 
-	defer c.Request.Body.Close()
-	con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
-	fmt.Printf("con: %+v", string(con))
+	// defer c.Request.Body.Close()
+	// con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
+	// fmt.Printf("con: %+v", string(con))
 
 	var textMsg define.WXTextMsg
 	err := c.ShouldBindXML(&textMsg)
@@ -89,7 +88,6 @@ func MsgBack(c *gin.Context) {
 	}
 
 	fmt.Printf("msg: %+v", textMsg)
-	log.Printf("[消息接收] - 收到消息, 消息类型为: %s, 消息内容为: %s\n", textMsg.MsgType, textMsg.Content)
 
 	//业务逻辑，根据信息需要进行的业务逻辑
 

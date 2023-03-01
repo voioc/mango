@@ -6,10 +6,7 @@ type DemoRequest struct {
 
 // WXTextMsg 微信文本消息结构体
 type WXTextMsg struct {
-	ToUserName   string
-	FromUserName string
-	CreateTime   int64
-	MsgType      string
-	Content      string
-	MsgId        int64
+	ToUserName string
+	Encrypt    string
+	AgentID    int
 }
