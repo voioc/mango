@@ -95,7 +95,7 @@ func MsgBack(c *gin.Context) {
 		fmt.Println(err.ErrCode, err.ErrMsg)
 	}
 
-	fmt.Println(msg)
+	fmt.Println(string(msg))
 
 	//业务逻辑，根据信息需要进行的业务逻辑
 
