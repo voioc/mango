@@ -12,7 +12,7 @@ type DemoRequest struct {
 type ReplyTextMsg struct {
 	ToUsername   string `xml:"ToUserName"`
 	FromUsername string `xml:"FromUserName"`
-	CreateTime   int    `xml:"CreateTime"`
+	CreateTime   int64  `xml:"CreateTime"`
 	MsgType      string `xml:"MsgType"`
 	Content      string `xml:"Content"`
 }
@@ -30,4 +30,20 @@ type WxVerify struct {
 	ToUserName string
 	Encrypt    string
 	AgentID    int
+}
+
+type Chat struct {
+	ID      string         `json:"id"`
+	Object  string         `json:"object"`
+	Created int            `json:"created"`
+	Model   string         `json:"model"`
+	Choices []ChatChoice   `json:"choices"`
+	Usage   map[string]int `json:"usage"`
+}
+
+type ChatChoice struct {
+	Text         string      `json:"text"`
+	Index        int         `json:"index"`
+	Logprobs     interface{} `json:"logprobs"`
+	FinishReason string      `json:"finish_reason"`
 }

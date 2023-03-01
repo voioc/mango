@@ -6,8 +6,10 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/voioc/mango/app/wx/define"
+	"github.com/voioc/mango/app/wx/service"
 	"github.com/voioc/mango/common"
 
 	"github.com/gin-gonic/gin"
@@ -99,17 +101,30 @@ func MsgBack(c *gin.Context) {
 	var content define.MsgContent
 	if err := xml.Unmarshal(msg, &content); err != nil {
 		fmt.Println("反序列化错误")
+		return
 	}
 
 	fmt.Printf("%+v\n", content)
+
+	chat, err2 := service.ChatS(c).Send(content.Content)
+	if err2 != nil {
+		fmt.Println(err2.Error())
+		return
+	}
+
+	fmt.Printf("%+v\n", chat)
+	replyContent := "I don't know"
+	if len(chat.Choices) > 0 {
+		replyContent = chat.Choices[0].Text
+	}
 
 	// 回复信息
 	reply, _ := xml.Marshal(define.ReplyTextMsg{
 		ToUsername:   content.FromUsername,
 		FromUsername: content.ToUsername,
-		CreateTime:   content.CreateTime,
+		CreateTime:   time.Now().Unix(),
 		MsgType:      "text",
-		Content:      "Receive",
+		Content:      replyContent,
 	})
 
 	encryptMsg, cryptErr := wxcpt.EncryptMsg(string(reply), timestamp, nonce)
