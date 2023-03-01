@@ -2,7 +2,7 @@ package handler
 
 import (
 	"fmt"
-	"log"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 
@@ -52,12 +52,12 @@ func MsgBack(c *gin.Context) {
 	   指令回调URL： 微信服务器推送suite_ticket以及安装应用时推送auth_code时。
 	*/
 	//企业微信加密签名
-	// msgSignature := cast.ToString(c.Query("msg_signature"))
-	// //时间戳
-	// timestamp := cast.ToString(c.Query("timestamp"))
-	// //随机数
-	// nonce := cast.ToString(c.Query("nonce"))
-	// // post请求的密文数据
+	msgSignature := cast.ToString(c.Query("msg_signature"))
+	//时间戳
+	timestamp := cast.ToString(c.Query("timestamp"))
+	//随机数
+	nonce := cast.ToString(c.Query("nonce"))
+	// post请求的密文数据
 	// defer c.Request.Body.Close()
 	// con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
 
@@ -76,18 +76,26 @@ func MsgBack(c *gin.Context) {
 	// xml.Unmarshal(msg, &changeContent)
 	// fmt.Println(changeContent)
 
-	// defer c.Request.Body.Close()
-	// con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
+	defer c.Request.Body.Close()
+	con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
 	// fmt.Printf("con: %+v", string(con))
 
 	var textMsg define.WXTextMsg
-	err := c.ShouldBindXML(&textMsg)
-	if err != nil {
-		log.Printf("[消息接收] - XML数据包解析失败: %v\n", err)
-		return
-	}
+	// err := c.ShouldBindXML(&textMsg)
+	// if err != nil {
+	// 	log.Printf("[消息接收] - XML数据包解析失败: %v\n", err)
+	// 	return
+	// }
 
 	fmt.Printf("msg: %+v", textMsg)
+
+	wxcpt := common.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, common.CORPID, common.JsonType)
+	msg, err := wxcpt.DecryptMsg(msgSignature, timestamp, nonce, con)
+	if err != nil {
+		fmt.Println(err.ErrCode, err.ErrMsg)
+	}
+
+	fmt.Println(msg)
 
 	//业务逻辑，根据信息需要进行的业务逻辑
 
