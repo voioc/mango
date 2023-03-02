@@ -28,12 +28,12 @@ func (s *ChatService) Send(msg string) (*define.Chat, error) {
 	}
 
 	data := map[string]interface{}{
-		"model":       "text-davinci-003",
+		"model":       "gpt-3.5-turbo",
 		"prompt":      msg,
 		"max_tokens":  1024,
 		"temperature": 0.8,
 	}
-	params, _ := jsoniter.MarshalToString(data)
+	params, _ := jsoniter.Marshal(data)
 	url := "https://api.openai.com/v1/completions"
 
 	tmp, err := proxy.SimpleClient(url, "POST", header, params)
