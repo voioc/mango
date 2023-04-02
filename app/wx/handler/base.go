@@ -48,6 +48,17 @@ func WxAuth(c *gin.Context) {
 	// return errors.New("微信验证appID错误, 微信请求值: " + string(id) + ", 配置文件内配置为: " + corpId)
 }
 
+//开启回调模式验证
+func PublicAuth(c *gin.Context) {
+	echoStr, err := url.PathUnescape(c.Query("echostr"))
+	if err != nil {
+		fmt.Println("url解码失败")
+		return
+	}
+
+	c.String(http.StatusOK, string(echoStr))
+}
+
 func MsgBack(c *gin.Context) {
 	/*
 	   指令回调URL： 微信服务器推送suite_ticket以及安装应用时推送auth_code时。
