@@ -5,18 +5,20 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
+	jsoniter "github.com/json-iterator/go"
 	wechat "github.com/silenceper/wechat/v2"
 	"github.com/silenceper/wechat/v2/cache"
 	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
+	"github.com/voioc/coco/proxy"
 	"github.com/voioc/mango/app/wx/define"
 )
 
 //开启回调模式验证
 func PublicMsg(c *gin.Context) {
+	fmt.Println(WxGetAccessToken())
 	// echoStr, err := url.PathUnescape(c.Query("echostr"))
 	// if err != nil {
 	// 	fmt.Println("url解码失败")
@@ -44,19 +46,19 @@ func PublicMsg(c *gin.Context) {
 	// }
 
 	// fmt.Printf("%+v\n", chat)
-	replyContent := "I don't know"
+	// replyContent := "I don't know"
 	// if len(chat.Choices) > 0 {
 	// 	replyContent = chat.Choices[0].Text
 	// }
 
 	// 回复信息
-	reply, _ := xml.Marshal(define.ReplyTextMsg{
-		ToUsername:   content.FromUsername,
-		FromUsername: content.ToUsername,
-		CreateTime:   time.Now().Unix(),
-		MsgType:      "text",
-		Content:      replyContent,
-	})
+	// reply, _ := xml.Marshal(define.ReplyTextMsg{
+	// 	ToUsername:   content.FromUsername,
+	// 	FromUsername: content.ToUsername,
+	// 	CreateTime:   time.Now().Unix(),
+	// 	MsgType:      "text",
+	// 	Content:      replyContent,
+	// })
 
 	// encryptMsg, cryptErr := wxcpt.EncryptMsg(string(reply), timestamp, nonce)
 	// if cryptErr != nil {
@@ -64,16 +66,15 @@ func PublicMsg(c *gin.Context) {
 	// 	return
 	// }
 
-	fmt.Println("reply encry", string(reply))
-	if num, err := c.Writer.Write(reply); err != nil {
-		fmt.Println("返回消息失败: ", err.Error())
-		return
-	} else {
-		fmt.Println("success ", num)
-	}
+	// fmt.Println("reply encry", string(reply))
+	// if num, err := c.Writer.Write(reply); err != nil {
+	// 	fmt.Println("返回消息失败: ", err.Error())
+	// 	return
+	// } else {
+	// 	fmt.Println("success ", num)
+	// }
 
 	//业务逻辑，根据信息需要进行的业务逻辑
-
 	c.String(http.StatusOK, "success") //需要返回"success"不然企业微信认为此次请求错误
 }
 
@@ -110,4 +111,19 @@ func handleMsg(rw http.ResponseWriter, req *http.Request) {
 	if err := server.Send(); err != nil {
 		fmt.Println(err.Error())
 	}
+}
+
+// WxGetAccessToken 获取微信accesstoken
+func WxGetAccessToken() string {
+	params := map[string]string{
+		"grant_type": "client_credential",
+		"appid":      "wx2af03ead301cf223",
+		"secret":     "b98b0b0719aa6042f4ac28d7d504d110",
+	}
+	url := "https://api.weixin.qq.com/cgi-bin/token"
+
+	tmp, _ := proxy.SimpleClient(url, "GET", nil, params)
+	token := jsoniter.Get(tmp.Body, "access_token").ToString()
+
+	return token
 }
