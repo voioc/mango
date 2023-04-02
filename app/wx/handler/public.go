@@ -21,10 +21,11 @@ func PublicMsg(c *gin.Context) {
 	// }
 
 	// c.String(http.StatusOK, string(echoStr))
-	// handleMsg(c.Writer, c.Request)
+
 	defer c.Request.Body.Close()
 	con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
 	fmt.Printf("con: %+v", string(con))
+	handleMsg(c.Writer, c.Request)
 }
 
 func handleMsg(rw http.ResponseWriter, req *http.Request) {

@@ -16,6 +16,7 @@ func DemoRouter(r *gin.RouterGroup) {
 	// 内部url
 	wxGroup := r.Use() // 单独绑定中间件
 	wxGroup.GET("/auth", handler.WxAuth)
-	wxGroup.GET("/public/auth", handler.PublicMsg)
 	wxGroup.POST("/auth", handler.MsgBack)
+	wxGroup.GET("/public/auth", handler.PublicMsg)
+	wxGroup.POST("/public/auth", handler.PublicMsg)
 }
