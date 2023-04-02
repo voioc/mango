@@ -8,7 +8,7 @@ type CDATA struct {
 	Value string `xml:",cdata"`
 }
 
-type ReplyText struct {
+type XML struct {
 	ToUsername   CDATA `xml:"ToUsername"`
 	FromUsername CDATA `xml:"FromUsername"`
 	CreateTime   int64 `xml:"CreateTime"`
