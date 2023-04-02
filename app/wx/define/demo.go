@@ -8,17 +8,25 @@ type CDATA struct {
 	Value string `xml:",cdata"`
 }
 
+type ReplyText struct {
+	ToUsername   CDATA `xml:"ToUsername"`
+	FromUsername CDATA `xml:"FromUsername"`
+	CreateTime   int64 `xml:"CreateTime"`
+	MsgType      CDATA `xml:"MsgType"`
+	Content      CDATA `xml:"Content"`
+}
+
 //ToUserName	成员UserID
 //FromUserName	企业微信CorpID
 //CreateTime	消息创建时间（整型）
 //MsgType	消息类型，此时固定为：text
 //Content	文本消息内容,最长不超过2048个字节，超过将截断
 type ReplyTextMsg struct {
-	ToUsername   CDATA `xml:"ToUsername"`
-	FromUsername CDATA `xml:"FromUsername"`
-	CreateTime   int64 `xml:"CreateTime"`
-	MsgType      CDATA `xml:"MsgType"`
-	Content      CDATA `xml:"Content"`
+	ToUsername   string `xml:"ToUserName"`
+	FromUsername string `xml:"FromUserName"`
+	CreateTime   int64  `xml:"CreateTime"`
+	MsgType      string `xml:"MsgType"`
+	Content      string `xml:"Content"`
 }
 type MsgContent struct {
 	ToUsername   string `xml:"ToUserName"`

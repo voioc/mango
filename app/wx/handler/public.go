@@ -53,7 +53,7 @@ func PublicMsg(c *gin.Context) {
 	// }
 
 	// 回复信息
-	reply, _ := xml.Marshal(define.ReplyTextMsg{
+	reply, _ := xml.Marshal(define.ReplyText{
 		ToUsername:   define.CDATA{Value: content.FromUsername},
 		FromUsername: define.CDATA{Value: content.ToUsername},
 		CreateTime:   time.Now().Unix(),
