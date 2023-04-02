@@ -1,5 +1,7 @@
 package define
 
+import "encoding/xml"
+
 type DemoRequest struct {
 	ID int
 }
@@ -8,12 +10,13 @@ type CDATA struct {
 	Value string `xml:",cdata"`
 }
 
-type XML struct {
-	ToUsername   CDATA `xml:"ToUsername"`
-	FromUsername CDATA `xml:"FromUsername"`
-	CreateTime   int64 `xml:"CreateTime"`
-	MsgType      CDATA `xml:"MsgType"`
-	Content      CDATA `xml:"Content"`
+type ReplyText struct {
+	XMLName      xml.Name `xml:"xml"`
+	ToUsername   CDATA    `xml:"ToUsername"`
+	FromUsername CDATA    `xml:"FromUsername"`
+	CreateTime   int64    `xml:"CreateTime"`
+	MsgType      CDATA    `xml:"MsgType"`
+	Content      CDATA    `xml:"Content"`
 }
 
 //ToUserName	成员UserID
