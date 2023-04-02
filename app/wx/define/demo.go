@@ -1,5 +1,7 @@
 package define
 
+import "encoding/xml"
+
 type DemoRequest struct {
 	ID int
 }
@@ -10,11 +12,12 @@ type DemoRequest struct {
 //MsgType	消息类型，此时固定为：text
 //Content	文本消息内容,最长不超过2048个字节，超过将截断
 type ReplyTextMsg struct {
-	ToUsername   string `xml:"ToUserName"`
-	FromUsername string `xml:"FromUserName"`
-	CreateTime   int64  `xml:"CreateTime"`
-	MsgType      string `xml:"MsgType"`
-	Content      string `xml:"Content"`
+	XMLName      xml.Name `xml:"xml"`
+	ToUsername   string   `xml:",cdata"`
+	FromUsername string   `xml:",cdata"`
+	CreateTime   int64    `xml:"CreateTime"`
+	MsgType      string   `xml:",cdata"`
+	Content      string   `xml:",cdata"`
 }
 type MsgContent struct {
 	ToUsername   string `xml:"ToUserName"`
