@@ -1,9 +1,11 @@
 package define
 
-import "encoding/xml"
-
 type DemoRequest struct {
 	ID int
+}
+
+type CDATA struct {
+	Value string `xml:",cdata"`
 }
 
 //ToUserName	成员UserID
@@ -12,12 +14,11 @@ type DemoRequest struct {
 //MsgType	消息类型，此时固定为：text
 //Content	文本消息内容,最长不超过2048个字节，超过将截断
 type ReplyTextMsg struct {
-	XMLName      xml.Name `xml:"xml"`
-	ToUsername   string   `xml:",cdata"`
-	FromUsername string   `xml:",cdata"`
-	CreateTime   int64    `xml:"CreateTime"`
-	MsgType      string   `xml:",cdata"`
-	Content      string   `xml:",cdata"`
+	ToUsername   CDATA `xml:"ToUsername"`
+	FromUsername CDATA `xml:"FromUsername"`
+	CreateTime   int64 `xml:"CreateTime"`
+	MsgType      CDATA `xml:"MsgType"`
+	Content      CDATA `xml:"Content"`
 }
 type MsgContent struct {
 	ToUsername   string `xml:"ToUserName"`
