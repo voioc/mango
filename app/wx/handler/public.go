@@ -1,15 +1,19 @@
 package handler
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	wechat "github.com/silenceper/wechat/v2"
 	"github.com/silenceper/wechat/v2/cache"
 	offConfig "github.com/silenceper/wechat/v2/officialaccount/config"
 	"github.com/silenceper/wechat/v2/officialaccount/message"
+	"github.com/voioc/mango/app/wx/define"
+	"github.com/voioc/mango/app/wx/service"
 )
 
 //开启回调模式验证
@@ -25,7 +29,53 @@ func PublicMsg(c *gin.Context) {
 	defer c.Request.Body.Close()
 	con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
 	fmt.Printf("con: %+v", string(con))
-	handleMsg(c.Writer, c.Request)
+
+	var content define.MsgContent
+	if err := xml.Unmarshal(con, &content); err != nil {
+		fmt.Println("反序列化错误")
+		return
+	}
+
+	fmt.Printf("%+v\n", content)
+
+	chat, err2 := service.ChatS(c).Send(content.Content)
+	if err2 != nil {
+		fmt.Println(err2.Error())
+		return
+	}
+
+	fmt.Printf("%+v\n", chat)
+	replyContent := "I don't know"
+	if len(chat.Choices) > 0 {
+		replyContent = chat.Choices[0].Text
+	}
+
+	// 回复信息
+	reply, _ := xml.Marshal(define.ReplyTextMsg{
+		ToUsername:   content.FromUsername,
+		FromUsername: content.ToUsername,
+		CreateTime:   time.Now().Unix(),
+		MsgType:      "text",
+		Content:      replyContent,
+	})
+
+	// encryptMsg, cryptErr := wxcpt.EncryptMsg(string(reply), timestamp, nonce)
+	// if cryptErr != nil {
+	// 	fmt.Println("回复加密出错", cryptErr)
+	// 	return
+	// }
+
+	fmt.Println("reply encry", string(reply))
+	if num, err := c.Writer.Write(reply); err != nil {
+		fmt.Println("返回消息失败: ", err.Error())
+		return
+	} else {
+		fmt.Println("success ", num)
+	}
+
+	//业务逻辑，根据信息需要进行的业务逻辑
+
+	c.String(http.StatusOK, "success") //需要返回"success"不然企业微信认为此次请求错误
 }
 
 func handleMsg(rw http.ResponseWriter, req *http.Request) {
@@ -58,5 +108,7 @@ func handleMsg(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	//发送回复的消息
-	server.Send()
+	if err := server.Send(); err != nil {
+		fmt.Println(err.Error())
+	}
 }
