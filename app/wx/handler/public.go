@@ -69,6 +69,7 @@ func PublicMsg(c *gin.Context) {
 	// }
 
 	// reply := []byte("<xml><ToUserName><![CDATA[oDk236LGfpuPCzAqH09I9RzFYw1c]]></ToUserName><FromUserName><![CDATA[gh_2680178c02e1]]></FromUserName><CreateTime>1680448101</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[你好]]></Content></xml>")
+	reply = []byte("<xml><ToUsername><![CDATA[oDk236LGfpuPCzAqH09I9RzFYw1c]]></ToUsername><FromUsername><![CDATA[gh_2680178c02e1]]></FromUsername><CreateTime>1680449116</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[I don't know]]></Content></xml>")
 	fmt.Println("reply encry", string(reply))
 	if num, err := c.Writer.Write(reply); err != nil {
 		fmt.Println("返回消息失败: ", err.Error())
@@ -85,7 +86,8 @@ func PublicMsg(c *gin.Context) {
 
 	//业务逻辑，根据信息需要进行的业务逻辑
 	c.String(http.StatusOK, "success") //需要返回"success"不然企业微信认为此次请求错误
-
+	// <xml><ToUserName><![CDATA[oDk236LGfpuPCzAqH09I9RzFYw1c]]></ToUserName><FromUserName><![CDATA[gh_2680178c02e1]]></FromUserName><CreateTime>1680448101</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[你好]]></Content></xml>
+	// <xml><ToUsername><![CDATA[oDk236LGfpuPCzAqH09I9RzFYw1c]]></ToUsername><FromUsername><![CDATA[gh_2680178c02e1]]></FromUsername><CreateTime>1680449116</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[你好]]></Content></xml>
 }
 
 func handleMsg(rw http.ResponseWriter, req *http.Request) {
