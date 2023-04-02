@@ -19,7 +19,7 @@ import (
 
 //开启回调模式验证
 func PublicMsg(c *gin.Context) {
-	fmt.Println(WxGetAccessToken())
+	// fmt.Println(WxGetAccessToken())
 	// echoStr, err := url.PathUnescape(c.Query("echostr"))
 	// if err != nil {
 	// 	fmt.Println("url解码失败")
@@ -68,18 +68,18 @@ func PublicMsg(c *gin.Context) {
 	// }
 
 	fmt.Println("reply encry", string(reply))
-	// if num, err := c.Writer.Write(reply); err != nil {
-	// 	fmt.Println("返回消息失败: ", err.Error())
-	// 	return
-	// } else {
-	// 	fmt.Println("success ", num)
-	// }
+	if num, err := c.Writer.Write(reply); err != nil {
+		fmt.Println("返回消息失败: ", err.Error())
+		return
+	} else {
+		fmt.Println("success: ", num)
+	}
 
-	accessToken := WxGetAccessToken()
-	params, _ := jsoniter.Marshal(reply)
-	url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + accessToken
-	tmp, _ := proxy.SimpleClient(url, "POST", nil, params)
-	fmt.Printf("%+v\n", tmp)
+	// accessToken := WxGetAccessToken()
+	// params, _ := jsoniter.Marshal(reply)
+	// url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + accessToken
+	// tmp, _ := proxy.SimpleClient(url, "POST", nil, params)
+	// fmt.Println(string(tmp.Body))
 
 	//业务逻辑，根据信息需要进行的业务逻辑
 	c.String(http.StatusOK, "success") //需要返回"success"不然企业微信认为此次请求错误
