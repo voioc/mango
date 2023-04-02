@@ -12,9 +12,9 @@ type CDATA struct {
 
 type ReplyText struct {
 	XMLName      xml.Name `xml:"xml"`
-	ToUsername   CDATA    `xml:"ToUsername"`
-	FromUsername CDATA    `xml:"FromUsername"`
-	CreateTime   string   `xml:"CreateTime"`
+	ToUserName   CDATA    `xml:"ToUserName"`
+	FromUserName CDATA    `xml:"FromUserName"`
+	CreateTime   int64    `xml:"CreateTime"`
 	MsgType      CDATA    `xml:"MsgType"`
 	Content      CDATA    `xml:"Content"`
 }
@@ -32,13 +32,13 @@ type ReplyTextMsg struct {
 	Content      string `xml:"Content"`
 }
 type MsgContent struct {
-	ToUsername   string `xml:"ToUserName"`
-	FromUsername string `xml:"FromUserName"`
+	ToUserName   string `xml:"ToUserName"`
+	FromUserName string `xml:"FromUserName"`
 	CreateTime   int    `xml:"CreateTime"`
 	MsgType      string `xml:"MsgType"`
 	Content      string `xml:"Content"`
-	Msgid        string `xml:"MsgId"`
-	Agentid      int    `xml:"AgentID"`
+	MsgID        string `xml:"MsgId"`
+	AgentID      int    `xml:"AgentID"`
 }
 
 type WxVerify struct {

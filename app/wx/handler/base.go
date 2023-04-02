@@ -120,8 +120,8 @@ func MsgBack(c *gin.Context) {
 
 	// 回复信息
 	reply, _ := xml.Marshal(define.ReplyTextMsg{
-		ToUsername:   content.FromUsername,
-		FromUsername: content.ToUsername,
+		ToUsername:   content.FromUserName,
+		FromUsername: content.ToUserName,
 		CreateTime:   time.Now().Unix(),
 		MsgType:      "text",
 		Content:      replyContent,

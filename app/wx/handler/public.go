@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
@@ -54,9 +55,9 @@ func PublicMsg(c *gin.Context) {
 	// 回复信息
 	reply, _ := xml.Marshal(define.ReplyText{
 		XMLName:      xml.Name{Local: "xml"},
-		ToUsername:   define.CDATA{Value: content.FromUsername},
-		FromUsername: define.CDATA{Value: content.ToUsername},
-		CreateTime:   "1680448101",
+		ToUserName:   define.CDATA{Value: content.FromUserName},
+		FromUserName: define.CDATA{Value: content.ToUserName},
+		CreateTime:   time.Now().Unix(),
 		MsgType:      define.CDATA{Value: "text"},
 		Content:      define.CDATA{Value: replyContent},
 	})
@@ -66,8 +67,8 @@ func PublicMsg(c *gin.Context) {
 	// 	fmt.Println("回复加密出错", cryptErr)
 	// 	return
 	// }
-	fmt.Println("reply 11111", string(reply))
-	reply = []byte("<xml><ToUserName><![CDATA[oDk236LGfpuPCzAqH09I9RzFYw1c]]></ToUserName><FromUserName><![CDATA[gh_2680178c02e1]]></FromUserName><CreateTime>1680448101</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[" + replyContent + "]]></Content></xml>")
+	// fmt.Println("reply 11111", string(reply))
+	// reply = []byte("<xml><ToUserName><![CDATA[oDk236LGfpuPCzAqH09I9RzFYw1c]]></ToUserName><FromUserName><![CDATA[gh_2680178c02e1]]></FromUserName><CreateTime>1680448101</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[" + replyContent + "]]></Content></xml>")
 	// reply = []byte("<xml><ToUsername><![CDATA[oDk236LGfpuPCzAqH09I9RzFYw1c]]></ToUsername><FromUsername><![CDATA[gh_2680178c02e1]]></FromUsername><CreateTime>1680449116</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[你好]]></Content></xml>")
 	fmt.Println("reply encry", string(reply))
 	if num, err := c.Writer.Write(reply); err != nil {
