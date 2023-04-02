@@ -1,13 +1,15 @@
 package handler
 
 import (
+	"encoding/xml"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/voioc/mango/app/wx/define"
+	"github.com/voioc/mango/app/wx/service"
 	"github.com/voioc/mango/common"
 
 	"github.com/gin-gonic/gin"
@@ -33,7 +35,7 @@ func WxAuth(c *gin.Context) {
 		return
 	}
 
-	wxcpt := common.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, common.CORPID, common.JsonType)
+	wxcpt := common.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, common.CORPID, common.XmlType)
 	echoStr, cryptErr := wxcpt.VerifyURL(msgSignature, cast.ToString(timestamp), nonce, echostr)
 	if nil != cryptErr {
 		fmt.Println("verifyUrl fail", cryptErr)
@@ -64,12 +66,12 @@ func MsgBack(c *gin.Context) {
 	   指令回调URL： 微信服务器推送suite_ticket以及安装应用时推送auth_code时。
 	*/
 	//企业微信加密签名
-	// msgSignature := cast.ToString(c.Query("msg_signature"))
-	// //时间戳
-	// timestamp := cast.ToString(c.Query("timestamp"))
-	// //随机数
-	// nonce := cast.ToString(c.Query("nonce"))
-	// // post请求的密文数据
+	msgSignature := cast.ToString(c.Query("msg_signature"))
+	//时间戳
+	timestamp := cast.ToString(c.Query("timestamp"))
+	//随机数
+	nonce := cast.ToString(c.Query("nonce"))
+	// post请求的密文数据
 	// defer c.Request.Body.Close()
 	// con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
 
@@ -92,15 +94,63 @@ func MsgBack(c *gin.Context) {
 	con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
 	fmt.Printf("con: %+v", string(con))
 
-	var textMsg define.WXTextMsg
-	err := c.ShouldBindXML(&textMsg)
+	// var textMsg define.WXTextMsg
+	// err := c.ShouldBindXML(&textMsg)
+	// if err != nil {
+	// 	log.Printf("[消息接收] - XML数据包解析失败: %v\n", err)
+	// 	return
+	// }
+
+	wxcpt := common.NewWXBizMsgCrypt(common.TOKEN, common.AESKEY, common.CORPID, common.XmlType)
+	msg, err := wxcpt.DecryptMsg(msgSignature, timestamp, nonce, con)
 	if err != nil {
-		log.Printf("[消息接收] - XML数据包解析失败: %v\n", err)
+		fmt.Println(err.ErrCode, err.ErrMsg)
+	}
+
+	fmt.Println(string(msg))
+
+	var content define.MsgContent
+	if err := xml.Unmarshal(msg, &content); err != nil {
+		fmt.Println("反序列化错误")
 		return
 	}
 
-	fmt.Printf("msg: %+v", textMsg)
-	log.Printf("[消息接收] - 收到消息, 消息类型为: %s, 消息内容为: %s\n", textMsg.MsgType, textMsg.Content)
+	fmt.Printf("%+v\n", content)
+
+	chat, err2 := service.ChatS(c).Send(content.Content)
+	if err2 != nil {
+		fmt.Println(err2.Error())
+		return
+	}
+
+	fmt.Printf("%+v\n", chat)
+	replyContent := "I don't know"
+	if len(chat.Choices) > 0 {
+		replyContent = chat.Choices[0].Text
+	}
+
+	// 回复信息
+	reply, _ := xml.Marshal(define.ReplyTextMsg{
+		ToUsername:   content.FromUsername,
+		FromUsername: content.ToUsername,
+		CreateTime:   time.Now().Unix(),
+		MsgType:      "text",
+		Content:      replyContent,
+	})
+
+	encryptMsg, cryptErr := wxcpt.EncryptMsg(string(reply), timestamp, nonce)
+	if cryptErr != nil {
+		fmt.Println("回复加密出错", cryptErr)
+		return
+	}
+
+	fmt.Println("reply encry", string(encryptMsg))
+	if num, err := c.Writer.Write(encryptMsg); err != nil {
+		fmt.Println("返回消息失败: ", err.Error())
+		return
+	} else {
+		fmt.Println("success ", num)
+	}
 
 	//业务逻辑，根据信息需要进行的业务逻辑
 
