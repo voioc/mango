@@ -15,6 +15,7 @@ import (
 	"github.com/silenceper/wechat/v2/officialaccount/message"
 	"github.com/voioc/coco/proxy"
 	"github.com/voioc/mango/app/wx/define"
+	"github.com/voioc/mango/app/wx/service"
 )
 
 //开启回调模式验证
@@ -40,17 +41,17 @@ func PublicMsg(c *gin.Context) {
 
 	fmt.Printf("%+v\n", content)
 
-	// chat, err2 := service.ChatS(c).Send(content.Content)
-	// if err2 != nil {
-	// 	fmt.Println(err2.Error())
-	// 	return
-	// }
+	chat, err2 := service.ChatS(c).Send(content.Content)
+	if err2 != nil {
+		fmt.Println(err2.Error())
+		return
+	}
 
 	// fmt.Printf("%+v\n", chat)
 	replyContent := "I don't know"
-	// if len(chat.Choices) > 0 {
-	// replyContent = chat.Choices[0].Text
-	// }
+	if len(chat.Choices) > 0 {
+		replyContent = chat.Choices[0].Text
+	}
 
 	// 回复信息
 	reply, _ := xml.Marshal(define.ReplyText{
