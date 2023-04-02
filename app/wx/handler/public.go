@@ -56,7 +56,7 @@ func PublicMsg(c *gin.Context) {
 		XMLName:      xml.Name{Local: "xml"},
 		ToUsername:   define.CDATA{Value: content.FromUsername},
 		FromUsername: define.CDATA{Value: content.ToUsername},
-		CreateTime:   1680449617,
+		CreateTime:   "1680449617",
 		MsgType:      define.CDATA{Value: "text"},
 		Content:      define.CDATA{Value: replyContent},
 	})
