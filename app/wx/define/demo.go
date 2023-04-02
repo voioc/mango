@@ -14,7 +14,7 @@ type ReplyText struct {
 	XMLName      xml.Name `xml:"xml"`
 	ToUsername   CDATA    `xml:"ToUsername"`
 	FromUsername CDATA    `xml:"FromUsername"`
-	CreateTime   int64    `xml:"CreateTime"`
+	CreateTime   string   `xml:"CreateTime"`
 	MsgType      CDATA    `xml:"MsgType"`
 	Content      CDATA    `xml:"Content"`
 }
