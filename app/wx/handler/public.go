@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,10 @@ func PublicMsg(c *gin.Context) {
 	// }
 
 	// c.String(http.StatusOK, string(echoStr))
-	handleMsg(c.Writer, c.Request)
+	// handleMsg(c.Writer, c.Request)
+	defer c.Request.Body.Close()
+	con, _ := ioutil.ReadAll(c.Request.Body) //获取post的数据
+	fmt.Printf("con: %+v", string(con))
 }
 
 func handleMsg(rw http.ResponseWriter, req *http.Request) {
