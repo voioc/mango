@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	jsoniter "github.com/json-iterator/go"
@@ -46,19 +47,19 @@ func PublicMsg(c *gin.Context) {
 	// }
 
 	// fmt.Printf("%+v\n", chat)
-	// replyContent := "I don't know"
+	replyContent := "I don't know"
 	// if len(chat.Choices) > 0 {
 	// 	replyContent = chat.Choices[0].Text
 	// }
 
 	// 回复信息
-	// reply, _ := xml.Marshal(define.ReplyTextMsg{
-	// 	ToUsername:   content.FromUsername,
-	// 	FromUsername: content.ToUsername,
-	// 	CreateTime:   time.Now().Unix(),
-	// 	MsgType:      "text",
-	// 	Content:      replyContent,
-	// })
+	reply, _ := xml.Marshal(define.ReplyTextMsg{
+		ToUsername:   content.FromUsername,
+		FromUsername: content.ToUsername,
+		CreateTime:   time.Now().Unix(),
+		MsgType:      "text",
+		Content:      replyContent,
+	})
 
 	// encryptMsg, cryptErr := wxcpt.EncryptMsg(string(reply), timestamp, nonce)
 	// if cryptErr != nil {
@@ -66,13 +67,19 @@ func PublicMsg(c *gin.Context) {
 	// 	return
 	// }
 
-	// fmt.Println("reply encry", string(reply))
+	fmt.Println("reply encry", string(reply))
 	// if num, err := c.Writer.Write(reply); err != nil {
 	// 	fmt.Println("返回消息失败: ", err.Error())
 	// 	return
 	// } else {
 	// 	fmt.Println("success ", num)
 	// }
+
+	accessToken := WxGetAccessToken()
+	params, _ := jsoniter.Marshal(reply)
+	url := "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + accessToken
+	tmp, _ := proxy.SimpleClient(url, "POST", nil, params)
+	fmt.Printf("%+v\n", tmp)
 
 	//业务逻辑，根据信息需要进行的业务逻辑
 	c.String(http.StatusOK, "success") //需要返回"success"不然企业微信认为此次请求错误
