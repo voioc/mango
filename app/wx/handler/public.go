@@ -46,9 +46,9 @@ func PublicMsg(c *gin.Context) {
 	// }
 
 	// fmt.Printf("%+v\n", chat)
-	// replyContent := "I don't know"
+	replyContent := "I don't know"
 	// if len(chat.Choices) > 0 {
-	// 	replyContent = chat.Choices[0].Text
+	// replyContent = chat.Choices[0].Text
 	// }
 
 	// 回复信息
@@ -67,7 +67,7 @@ func PublicMsg(c *gin.Context) {
 	// 	return
 	// }
 
-	reply := []byte("<xml><ToUserName><![CDATA[oDk236LGfpuPCzAqH09I9RzFYw1c]]></ToUserName><FromUserName><![CDATA[gh_2680178c02e1]]></FromUserName><CreateTime>1680448101</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[你好]]></Content></xml>")
+	reply := []byte("<xml><ToUserName><![CDATA[oDk236LGfpuPCzAqH09I9RzFYw1c]]></ToUserName><FromUserName><![CDATA[gh_2680178c02e1]]></FromUserName><CreateTime>1680448101</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[" + replyContent + "]]></Content></xml>")
 	// reply = []byte("<xml><ToUsername><![CDATA[oDk236LGfpuPCzAqH09I9RzFYw1c]]></ToUsername><FromUsername><![CDATA[gh_2680178c02e1]]></FromUsername><CreateTime>1680449116</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[你好]]></Content></xml>")
 	fmt.Println("reply encry", string(reply))
 	if num, err := c.Writer.Write(reply); err != nil {
