@@ -114,31 +114,31 @@ func MsgBack(c *gin.Context) {
 
 	fmt.Printf("%+v\n", chat)
 	replyContent := "I don't know"
-	if len(chat.Choices) > 0 {
-		replyContent = chat.Choices[0].Text
-	}
+	for _, row := range chat.Choices {
+		replyContent = row.Message["content"]
 
-	// 回复信息
-	reply, _ := xml.Marshal(define.ReplyTextMsg{
-		ToUsername:   content.FromUserName,
-		FromUsername: content.ToUserName,
-		CreateTime:   time.Now().Unix(),
-		MsgType:      "text",
-		Content:      replyContent,
-	})
+		// 回复信息
+		reply, _ := xml.Marshal(define.ReplyTextMsg{
+			ToUsername:   content.FromUserName,
+			FromUsername: content.ToUserName,
+			CreateTime:   time.Now().Unix(),
+			MsgType:      "text",
+			Content:      replyContent,
+		})
 
-	encryptMsg, cryptErr := wxcpt.EncryptMsg(string(reply), timestamp, nonce)
-	if cryptErr != nil {
-		fmt.Println("回复加密出错", cryptErr)
-		return
-	}
+		encryptMsg, cryptErr := wxcpt.EncryptMsg(string(reply), timestamp, nonce)
+		if cryptErr != nil {
+			fmt.Println("回复加密出错", cryptErr)
+			return
+		}
 
-	fmt.Println("reply encry", string(encryptMsg))
-	if num, err := c.Writer.Write(encryptMsg); err != nil {
-		fmt.Println("返回消息失败: ", err.Error())
-		return
-	} else {
-		fmt.Println("success ", num)
+		fmt.Println("reply encry", string(encryptMsg))
+		if num, err := c.Writer.Write(encryptMsg); err != nil {
+			fmt.Println("返回消息失败: ", err.Error())
+			return
+		} else {
+			fmt.Println("success ", num)
+		}
 	}
 
 	//业务逻辑，根据信息需要进行的业务逻辑

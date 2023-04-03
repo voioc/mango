@@ -11,10 +11,9 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0
-	github.com/silenceper/wechat v1.2.6
 	github.com/silenceper/wechat/v2 v2.1.4
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/viper v1.15.0
-	github.com/voioc/coco v0.0.0-20221205132412-80884e197898
+	github.com/voioc/coco v0.0.0-20230403133355-b67cc0632178
 	go.uber.org/zap v1.24.0
 )

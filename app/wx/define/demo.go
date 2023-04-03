@@ -50,15 +50,15 @@ type WxVerify struct {
 type Chat struct {
 	ID      string         `json:"id"`
 	Object  string         `json:"object"`
-	Created int            `json:"created"`
+	Created int64          `json:"created"`
 	Model   string         `json:"model"`
 	Choices []ChatChoice   `json:"choices"`
 	Usage   map[string]int `json:"usage"`
 }
 
 type ChatChoice struct {
-	Text         string      `json:"text"`
-	Index        int         `json:"index"`
-	Logprobs     interface{} `json:"logprobs"`
-	FinishReason string      `json:"finish_reason"`
+	// Text         string      `json:"text"`
+	Index        int               `json:"index"`
+	Message      map[string]string `json:"message"`
+	FinishReason string            `json:"finish_reason"`
 }

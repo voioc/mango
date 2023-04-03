@@ -50,7 +50,7 @@ func PublicMsg(c *gin.Context) {
 	// fmt.Printf("%+v\n", chat)
 	replyContent := "I don't know"
 	if len(chat.Choices) > 0 {
-		replyContent = chat.Choices[0].Text
+		replyContent = chat.Choices[0].Message["content"]
 	}
 
 	// 回复信息

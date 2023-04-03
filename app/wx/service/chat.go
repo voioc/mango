@@ -38,7 +38,7 @@ func (s *ChatService) Send(msg string) (*define.Chat, error) {
 		"temperature": 0.8,
 	}
 	params, _ := jsoniter.Marshal(data)
-	url := "https://api.openai.com/v1/completions"
+	url := "https://api.openai.com/v1/chat/completions"
 
 	tmp, err := proxy.SimpleClient(url, "POST", header, params)
 	// s.SetDebug(1, "{Get data from cz88, url: %s?%s (%s)}", url, public.UrlEncode(params), public.TimeCost(startTime))
