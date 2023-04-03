@@ -27,9 +27,13 @@ func (s *ChatService) Send(msg string) (*define.Chat, error) {
 		// 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
 	}
 
+	msgMap := map[string]string{"role": "user", "content": msg}
+	var message []map[string]string
+	message = append(message, msgMap)
+
 	data := map[string]interface{}{
 		"model":       "gpt-3.5-turbo",
-		"prompt":      msg,
+		"messages":    message,
 		"max_tokens":  1024,
 		"temperature": 0.8,
 	}
